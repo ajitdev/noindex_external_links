@@ -161,7 +161,11 @@ function noindex_external_links_filter($op, $delta = 0, $format = -1, $text = ''
       {
         //This regexp not found tags at links ancor:
         //$regexp = '/<a([^href]*)\shref="([^"]+)"\s*([^>]*)>([^<]+)<\/a>/i';
-        $regexp = '/<a([^href]*)\shref="([^"]+)"\s*([^>]*)>(.*?)<\/a>/i';
+
+        //This regexp not found link like: <a title="Download this file as PDF" href="http://buytaert.net/files/oopsla07-georges.pdf">dfgsdfgdfgdfg</a>
+        //$regexp = '/<a([^href]*)\shref="([^"]+)"\s*([^>]*)>(.*?)<\/a>/i';
+
+        $regexp = '/<a(.*?)\shref="([^"]+)"\s*([^>]*)>(.*?)<\/a>/i';
         $text = preg_replace_callback($regexp, 'noindex_external_links_replace', $text);
       }
       return $text;
