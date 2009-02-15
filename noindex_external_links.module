@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ */
+
+
 
 /**
  * Implementation of hook_menu()
@@ -34,21 +39,22 @@ function noindex_external_links_settings_form() {
     '#description' => t('You can use any combination of this methods.'),
     '#default_value' => variable_get('noindex_external_links_method', array()),
     '#options' => array(
-      'noindex' => '<strong>'.t('Wrap links with tag').' '.htmlentities('<NOINDEX>').' </strong>. <br />'.t('NOINDEX tag is used to deny indexing part of page. Only Yandex and Rambler considers this tag but Google and others doesn\'t. There is also an attribute NOINDEX in meta-tag Robots.'),
+      'noindex' => '<strong>'. t('Wrap links with tag') .' '. htmlentities('<NOINDEX>') .' </strong>. <br />'. t('NOINDEX tag is used to deny indexing part of page. Only Yandex and Rambler considers this tag but Google and others doesn\'t. There is also an attribute NOINDEX in meta-tag Robots.'),
 
       'nofollow' => t('<strong>Add attribute rel="nofollow" to links</strong>. <br />This link\'s attribute has no effect on indexing. Only Google really do not follow this links but others do. Attribute is used to say to search engine that links no longer constitute a "vote" in the PageRank system.'),
     ),
   );
 
+  $html_validation_link = array('!link' => l(t('HTML-validation'), 'http://validator.w3.org/'));
+
   $form['noindex_external_links_noindex_format'] = array(
     '#type' => 'radios',
-    '#title' => htmlentities('<NOINDEX>').t(' format'),
-    '#description' => t('If you want your pages be valid then use option "Valid".' ),
+    '#title' => htmlentities('<NOINDEX>') . t(' format'),
+    '#description' => t('If you want your pages be valid then use option "Valid".'),
     '#options' => array(
-      'simple' => '<strong>'.t('Simple').'</strong>: '.htmlentities('<noindex>').' <br />'.
-              t('This is a default. NOINDEX-tag isn\'t a valid HTML-tag. It was created by Yandex and used also by Rambler. Google ignore this tag. HTML-validators considers this tag as mistake so your pages will not pass ').l(t('HTML-validation'), 'http://validator.w3.org/').'.',
-      'valid' => '<strong>'.t('Valid').'</strong>: '.htmlentities('<span style="display: none"><![CDATA[<noindex>]]></span>').' <br />'.t('Using this trick your pages will pass ').l(t('HTML-validation'), 'http://validator.w3.org/').
-      t('.<br /><em><strong>NOTE</strong>: You have to set "Noindex External Links filter" below "HTML-corrector filter" for all input formats you\'re using at the</em> '). l(t('Input formats page.'), 'admin/settings/filters'),
+      'simple' => '<strong>'. t('Simple') .'</strong>: '. htmlentities('<noindex>') .'<br />'. t('This is a default. NOINDEX-tag isn\'t a valid HTML-tag. It was created by Yandex and used also by Rambler. Google ignore this tag. HTML-validators considers this tag as mistake so your pages will not pass !link.', $html_validation_link),
+
+      'valid' => '<strong>'. t('Valid') .'</strong>: '. htmlentities('<span style="display: none"><![CDATA[<noindex>]]></span>') .'<br />'. t('Using this trick your pages will pass !link.', $html_validation_link) .'<br /><em><strong>'. t('NOTE') .'</strong>: '. t('You have to set "Noindex External Links filter" below "HTML-corrector filter" for all input formats you\'re using at the !link</em>.', array('!link' => l(t('Input formats page'), 'admin/settings/filters')) ),
     ),
     '#default_value' => variable_get('noindex_external_links_noindex_format', 'simple'),
   );
@@ -120,7 +126,7 @@ function noindex_external_links_help($path, $arg) {
  * @return string
  *   The tip to be displayed
  */
-function noindex_external_links_filter_tips($delta, $format, $long = false) {
+function noindex_external_links_filter_tips($delta, $format, $long = FALSE) {
   $output .= '<p>'. t('Search Engines will index and follow ONLY links to allowed domains.') ."</p>\n";
   return $output;
 }
@@ -136,15 +142,18 @@ function noindex_external_links_filter_tips($delta, $format, $long = false) {
  * @return string
  */
 function noindex_external_links_filter($op, $delta = 0, $format = -1, $text = '') {
-  global $allowed_domains, $denied_domains, $method;
-  $allowed_domains = split(',', variable_get('noindex_external_links_allowed_domains', ''));
-  $denied_domains = split(',', variable_get('noindex_external_links_denied_domains', ''));
+  global $_noindex_external_links_allowed_domains;
+  global $_noindex_external_links_denied_domains;
+  global $_noindex_external_links_method;
+
+  $_noindex_external_links_allowed_domains = split(',', variable_get('noindex_external_links_allowed_domains', ''));
+  $_noindex_external_links_denied_domains = split(',', variable_get('noindex_external_links_denied_domains', ''));
   //Find domains in both lists:
-  $ignored_domains = array_diff ($allowed_domains, $denied_domains);
+  $ignored_domains = array_diff($_noindex_external_links_allowed_domains, $_noindex_external_links_denied_domains);
   if (count($ignored_domains)>0) {
     foreach ($ignored_domains as $domain)  {
-      unset($allowed_domains[$domain]);
-      unset($denied_domains[$domain]);
+      unset($_noindex_external_links_allowed_domains[$domain]);
+      unset($_noindex_external_links_denied_domains[$domain]);
     }
   }
 
@@ -156,9 +165,8 @@ function noindex_external_links_filter($op, $delta = 0, $format = -1, $text = ''
       return t('Links will be wrapped with tag NOINDEX and will have attribute rel="nofollow" added to them.');
 
     case "process":
-      $method = variable_get('noindex_external_links_method', array());
-      if (count($method)>0 || count($denied_domains)>0)
-      {
+      $_noindex_external_links_method = variable_get('noindex_external_links_method', array());
+      if (count($_noindex_external_links_method)>0 || count($_noindex_external_links_denied_domains)>0) {
         //This regexp not found tags at links ancor:
         //$regexp = '/<a([^href]*)\shref="([^"]+)"\s*([^>]*)>([^<]+)<\/a>/i';
 
@@ -184,7 +192,10 @@ function noindex_external_links_filter($op, $delta = 0, $format = -1, $text = ''
 
  */
 function noindex_external_links_replace($match) {
-  global $allowed_domains, $denied_domains, $method;
+  global $_noindex_external_links_allowed_domains;
+  global $_noindex_external_links_denied_domains;
+  global $_noindex_external_links_method;
+
   $url = parse_url($match[2]);
   if ($url['host'] == $_SERVER['HTTP_HOST'])  return $match[0]; //Inner Link
 
@@ -195,24 +206,21 @@ function noindex_external_links_replace($match) {
   $link = $match[0];
 
   //ToDo: Можно принудительно удалять noindex,nofollow...
-  if (in_array($url['host'], $allowed_domains))  return $link;
-  elseif (count($method)<1 && !in_array($url['host'], $denied_domains))  return $link;
+  if (in_array($url['host'], $_noindex_external_links_allowed_domains))  return $link;
+  elseif (count($_noindex_external_links_method)<1 && !in_array($url['host'], $_noindex_external_links_denied_domains))  return $link;
   else {
     //Combine all attributes:
-    $attr = $match[1].' '.$match[3];
-    if ($method['nofollow'] || in_array($url['host'], $denied_domains))
-    {
-      if (strpos($attr, 'nofollow') === FALSE)
-      {
-        if (strpos($attr, 'rel="') === FALSE)     $attr = $attr. ' rel="nofollow" ';
+    $attr = $match[1] .' '. $match[3];
+    if ($_noindex_external_links_method['nofollow'] || in_array($url['host'], $_noindex_external_links_denied_domains)) {
+      if (strpos($attr, 'nofollow') === FALSE) {
+        if (strpos($attr, 'rel="') === FALSE)     $attr = $attr .' rel="nofollow" ';
         else    $attr = preg_replace('!rel="([^"]+)"!', 'rel="${1} nofollow"', $attr);
       }
     }
 
-    $link = '<a href="'. $match[2].'" '.$attr.'>'.$match[4].'</a>';
+    $link = '<a href="'. $match[2] .'" '. $attr .'>'. $match[4] .'</a>';
 
-    if ($method['noindex'] || in_array($url['host'], $denied_domains))
-    {
+    if ($_noindex_external_links_method['noindex'] || in_array($url['host'], $_noindex_external_links_denied_domains)) {
       // Build a new link:
       if (variable_get('noindex_external_links_noindex_format', 'simple') == 'valid') {
         $link = '<span style="display: none"><![CDATA[<noindex>]]></span>'.$link.'<span style="display: none"><![CDATA[</noindex>]]></span>';
