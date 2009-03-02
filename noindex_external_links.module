@@ -65,8 +65,8 @@ function noindex_external_links_settings_form() {
     '#title' => t('Always allowed and always denied domains'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
-    '#description' => t('Links to your own domain is allowed by default for indexing and following. You can override this default behaviour by writing down your domain in one of this lists. If the domain will be found in both lists at the same time then will be used common methods for this domain.
-    <br /><em><strong>NOTE</strong>: Subdomain is a separate site.</em>
+    '#description' => t('Links to your own domain is always allowed for indexing and following. If the domain will be found in both lists at the same time then will be used common methods for this domain.
+    <br /><em><strong>NOTE</strong>: Subdomain is a separate site (For example: example.com, www.example.com, pda.example.com).</em>
     <br /><em><strong>NOTE</strong>: Allowed domains can have nofollow attribute and be wrapped by NOINDEX-tag if user was added them to node\'s body. This means that for allowed domains links do not changed at all.</em>'),
   );
 
@@ -229,3 +229,14 @@ function noindex_external_links_replace($match) {
   }
   return $link;
 }
+
+
+
+/*
+<?php
+function hook_preprocess_block(&$variables) {
+  print_r($variables); // И будет нам щасте
+}
+?>
+
+*/

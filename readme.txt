@@ -14,15 +14,16 @@
    * Простой. Значение по умолчанию. HTML-валидацию не пройдет.
    * Валидный. Пройдет HTML-валидацию.
 * Есть 2 списка доменов: 
-   * Всегда разрешённые домены. Поисковые системы будут всегда индексировать и переходить по ссылкам на эти домены с этого сайта.
-   * Всегда запрещённые домены. Поисковые системы никогда не будут индексировать и переходить по ссылкам с этого сайта на эти домены.
-* Ссылки на собственный домен разрешены к индексации и переходам по умолчанию.
+   * Всегда разрешённые домены. Ссылки на домены из этого списка будут ОТКРЫТЫ для индексации (index) и переходов (follow) поисковиками всегда, независимо от других настроек модуля.
+   * Всегда запрещённые домены.  Ссылки на домены из этого списка будут ЗАКРЫТЫ для индексации (noindex) и переходов (nofollow) поисковиками всегда, независимо от других настроек модуля.
+* Ссылки на собственный домен разрешены к индексации и переходам по умолчанию (index, follow).
 
 ----------------------
 Особенности применения
 * Модуль реализует фильтр ввода, а значит применяется к тексту ноды и комментариев. 
   Он не влияет на блоки и ссылки в шаблоне темы - закрыть их вам придется вручную.
 * Так как это фильтр ввода, то его нужно включить для каждого формата ввода, который используется на сайте.
+
 
 -------------
 Благодарности
@@ -51,8 +52,8 @@ Features
    * Simple. This is a default. HTML-validators considers this tag as mistake so your pages will not pass HTML-validation.
    * Valid. Pages will pass HTML-validation.
 * Two domain lists: 
-   * Always allowed domains. Search Engines will always index and follow links to this domains at this site.
-   * Always denied domains. Search Engines will never index and follow links to this domains at this site.
+   * Always allowed domains. Links to domains from this list wiil be always OPENED for indexing and following  by search engines.
+   * Always denied domains.  Links to domains from this list wiil be always CLOSED for indexing and following  by search engines.
 * Links to your own domain is allowed by default for indexing and following.
 
 -------------
@@ -67,5 +68,5 @@ Tips and tricks
 Контакты (Contacts)
 
 Vlad Savitsky
-ICQ: 205535814
+ICQ: 20-пять-пять-358-один-4
 http://vladsavitsky.ru/contacts
