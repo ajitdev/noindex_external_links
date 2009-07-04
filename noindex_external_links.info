@@ -1,3 +1,4 @@
+; $Id$
 name = Noindex External Links
 description = "Take control of indexing external links on your site."
 core = "6.x"
