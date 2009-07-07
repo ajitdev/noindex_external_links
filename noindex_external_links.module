@@ -146,8 +146,9 @@ function noindex_external_links_filter($op, $delta = 0, $format = -1, $text = ''
   global $_noindex_external_links_denied_domains;
   global $_noindex_external_links_method;
 
-  $_noindex_external_links_allowed_domains = split(',', variable_get('noindex_external_links_allowed_domains', ''));
-  $_noindex_external_links_denied_domains = split(',', variable_get('noindex_external_links_denied_domains', ''));
+
+  $_redirect_external_links_allowed_domains = split(',', str_replace( ' ', '', variable_get('redirect_external_links_allowed_domains', '')));
+  $_redirect_external_links_denied_domains = split(',', str_replace( ' ', '', variable_get('redirect_external_links_denied_domains', '')));
   //Find domains in both lists:
   $ignored_domains = array_diff($_noindex_external_links_allowed_domains, $_noindex_external_links_denied_domains);
   if (count($ignored_domains)>0) {
