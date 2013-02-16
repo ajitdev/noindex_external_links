@@ -192,7 +192,7 @@ function _external_links($text, $filter, $format) {
         //This regexp not found link like: <a title="Download this file as PDF" href="http://buytaert.net/files/oopsla07-georges.pdf">dfgsdfgdfgdfg</a>
         //$regexp = '/<a([^href]*)\shref="([^"]+)"\s*([^>]*)>(.*?)<\/a>/i';
 
-        $regexp = '/<a(.*?)\shref="([^"]+)"\s*([^>]*)>(.*?)<\/a>/i';
+        $regexp = '/<a(.*?)\shref="([^"]+)"\s*([^>]*)>(.*?)<\/a>/is';
         $text = preg_replace_callback($regexp, 'noindex_external_links_replace', $text);
       }
       return $text;
