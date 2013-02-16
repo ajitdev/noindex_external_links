@@ -3,12 +3,18 @@
  * @file
  */
 
+/**
+ * Implements hook_install().
+ */
 function noindex_external_links_install() {
   drupal_set_message(
     st('Module Noindex External Links was installed.') . '<br />' . st('Site links is not protected yet.') . '<br />' . st('Visit !link and take control of your links indexing!', array('!link' => l(st('Noindex External Links Settings page'), 'admin/settings/noindex_external_links')))
   );
 }
 
+/**
+ * Implements hook_uninstall().
+ */
 function noindex_external_links_uninstall() {
   variable_del('noindex_external_links_method');
   variable_del('noindex_external_links_noindex_format');

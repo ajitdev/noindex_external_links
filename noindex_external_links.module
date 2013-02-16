@@ -4,10 +4,9 @@
  */
 
 /**
- * Implements hook_menu()
+ * Implements hook_menu().
  */
 function noindex_external_links_menu() {
-  //$items['admin/config/content/noindex_external_links'] = array(
   $items['admin/config/search/noindex_external_links'] = array(
     'title' => 'Noindex External Links',
     'description' => 'Take control of indexing external links on your site.',
@@ -23,7 +22,6 @@ function noindex_external_links_menu() {
 /**
  * Implements hook_permission().
  */
-
 function noindex_external_links_permission() {
   return array(
     'administer noindex external links' => array(
@@ -131,7 +129,6 @@ function noindex_external_links_help($path, $arg) {
  * @return string
  *   The tip to be displayed
  */
-
 function _external_links_tips($filter, $format, $long = FALSE) {
   $output = '<p>' . t('Search Engines will index and follow ONLY links to allowed domains.') . "</p>\n";
   return $output;
@@ -152,17 +149,22 @@ function noindex_external_links_filter_info() {
     'title' => t('Noindex External Links filter'),
     'description' => t('Links will be wrapped with tag NOINDEX and will have attribute rel="nofollow" added to them.'),
     'process callback' => '_external_links',
-    //'settings callback' => '_external_links_settings',
     'tips callback'  => '_external_links_tips',
     'cache' => FALSE,
   );
   return $filters;
 }
 
+/**
+ * Callback to normalize the domain list items.
+ */
 function _noindex_external_links_item(&$item) {
   $item = drupal_strtolower(trim($item));
 }
 
+/**
+ * The filtering function implementation.
+ */
 function _external_links($text, $filter, $format) {
   global $_noindex_external_links_allowed_domains;
   global $_noindex_external_links_denied_domains;
@@ -196,15 +198,11 @@ function _external_links($text, $filter, $format) {
       return $text;
 }
 
-//function _external_links_settings($format) {
-//}
-
 /**
  * Do the magic with links
  *
  * @param string $input
  * @return boolean
-
  */
 function noindex_external_links_replace($match) {
   global $_noindex_external_links_allowed_domains;
@@ -217,9 +215,6 @@ function noindex_external_links_replace($match) {
 
   $url_host = drupal_strtolower(trim($url['host']));
   if (strcasecmp($url_host, $_SERVER['HTTP_HOST']) == 0)  return $match[0]; //Inner Link
-
-  //  drupal_set_message('Process link: '. $match[0]);
-  //  watchdog('noindex_external_links', 'Process link: '. $match[0]);
 
   // Default in case it doesn't get changed.
   $link = $match[0];
@@ -242,8 +237,11 @@ function noindex_external_links_replace($match) {
     if ($_noindex_external_links_method['noindex'] || in_array($url_host, $_noindex_external_links_denied_domains)) {
       // Build a new link:
       if (variable_get('noindex_external_links_noindex_format', 'simple') == 'valid') {
-        $link = '<span style="display: none"><![CDATA[<noindex>]]></span>'.$link.'<span style="display: none"><![CDATA[</noindex>]]></span>';
-      } else    $link = '<noindex>'.$link.'</noindex>';
+        $link = '<span style="display: none"><![CDATA[<noindex>]]></span>' . $link . '<span style="display: none"><![CDATA[</noindex>]]></span>';
+      }
+      else {
+        $link = '<noindex>' . $link . '</noindex>';
+      }
     }
   }
   return $link;
