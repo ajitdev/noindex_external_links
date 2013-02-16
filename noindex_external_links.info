@@ -2,6 +2,6 @@ name = Noindex External Links
 description = Take control of indexing external links on your site.
 core = 7.x
 package = SEO
-
+configure = admin/config/search/noindex_external_links
 files[] = noindex_external_links.module
 files[] = noindex_external_links.install
