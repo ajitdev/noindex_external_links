@@ -55,11 +55,11 @@ function noindex_external_links_settings_form() {
     '#title' => htmlentities('<NOINDEX>') . t('format'),
     '#description' => t('If you want your pages be valid then use option "Valid".'),
     '#options' => array(
-      'simple' => '<strong>' . t('Simple') . '</strong>: ' . htmlentities('<noindex>') . '<br />' . t('This is a default. NOINDEX-tag isn\'t a valid HTML-tag. It was created by Yandex and used also by Rambler. Google ignore this tag. HTML-validators considers this tag as mistake so your pages will not pass !link.', $html_validation_link),
-
       'valid' => '<strong>' . t('Valid') . '</strong>: ' . htmlentities('<span style="display: none"><![CDATA[<noindex>]]></span>') . '<br />' . t('Using this trick your pages will pass !link.', $html_validation_link) . '<br /><em><strong>' . t('NOTE') . '</strong>: ' . t('You have to set "Noindex External Links filter" below "HTML-corrector filter" for all input formats you\'re using at the !link</em>.', $filter_settings_link),
+
+      'simple' => '<strong>' . t('Simple') . '</strong>: ' . htmlentities('<noindex>') . '<br />' . t('This is a default. NOINDEX-tag isn\'t a valid HTML-tag. It was created by Yandex and used also by Rambler. Google ignore this tag. HTML-validators considers this tag as mistake so your pages will not pass !link.', $html_validation_link),
     ),
-    '#default_value' => variable_get('noindex_external_links_noindex_format', 'simple'),
+    '#default_value' => variable_get('noindex_external_links_noindex_format', 'valid'),
   );
 
 
@@ -236,7 +236,7 @@ function noindex_external_links_replace($match) {
 
     if ($_noindex_external_links_method['noindex'] || in_array($url_host, $_noindex_external_links_denied_domains)) {
       // Build a new link:
-      if (variable_get('noindex_external_links_noindex_format', 'simple') == 'valid') {
+      if (variable_get('noindex_external_links_noindex_format', 'valid') == 'valid') {
         $link = '<span style="display: none"><![CDATA[<noindex>]]></span>' . $link . '<span style="display: none"><![CDATA[</noindex>]]></span>';
       }
       else {
