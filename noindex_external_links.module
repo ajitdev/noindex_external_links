@@ -204,18 +204,18 @@ function _external_links($text, $filter, $format) {
     }
   }
   $_noindex_external_links_domain_name = '';
-  if( isset( $_SERVER['HTTP_HOST'] ) ) {
+  if ( isset($_SERVER['HTTP_HOST']) ) {
     $_noindex_external_links_domain_name = strtolower($_SERVER['HTTP_HOST']);
   }
-  elseif( isset( $_SERVER['SERVER_NAME'] ) ) {
+  elseif ( isset($_SERVER['SERVER_NAME']) ) {
     $_noindex_external_links_domain_name = strtolower($_SERVER['SERVER_NAME']);
   }
-  elseif( isset( $_SERVER['HOSTNAME'] ) ) {
+  elseif ( isset($_SERVER['HOSTNAME']) ) {
     $_noindex_external_links_domain_name = strtolower($_SERVER['HOSTNAME']);
   } 
 
   $_noindex_external_links_subdomains_enabled = variable_get('noindex_external_links_subdomains_enabled');
-  $_noindex_external_links_top_domain_name = null;
+  $_noindex_external_links_top_domain_name = NULL;
   if ($_noindex_external_links_subdomains_enabled) {
     $host_parts = explode(".", $_noindex_external_links_domain_name);
     $domain_level = variable_get('noindex_external_links_top_domain_level', 2);

@@ -20,6 +20,8 @@ function noindex_external_links_uninstall() {
   variable_del('noindex_external_links_noindex_format');
   variable_del('noindex_external_links_denied_domains');
   variable_del('noindex_external_links_allowed_domains');
+  variable_del('noindex_external_links_subdomains_enabled');
+  variable_del('noindex_external_links_top_domain_level');
 
   drupal_set_message(
     t('Module Noindex External Links was uninstalled.<br />Hope you know what you\'re doing...')
