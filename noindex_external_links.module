@@ -120,14 +120,6 @@ function noindex_external_links_settings_form() {
 
 /**
  * Implements hook_help().
- *
- * @param string $path
- *   A Drupal path
- * @param array $arg
- *   An array that corresponds to the return value of the arg() function
- *
- * @return string
- *   The help text
  */
 function noindex_external_links_help($path, $arg) {
   switch ($path) {
@@ -156,12 +148,9 @@ function _noindex_external_links_tips($filter, $format, $long = FALSE) {
 }
 
 /**
- * Implements hook_filter_info. 
+ * Implements hook_filter_info(). 
  *
  * Defines a filter, "Noindex External Links filter".
- *
- * @return
- *   An associative array of filters
  */
 function noindex_external_links_filter_info() {
   $filters['external_links'] = array(
@@ -256,22 +245,27 @@ function noindex_external_links_replace($match) {
   global $_noindex_external_links_domain_name;
   $url = parse_url($match[2]);
 
-  if (!array_key_exists('host', $url)) { // Inner link.
+  if (!array_key_exists('host', $url)) {
+    // Inner link.
     return $match[0];
   }
 
   $url_host = drupal_strtolower(trim($url['host']));
-  if (strcasecmp($url_host, $_noindex_external_links_domain_name) == 0) // Inner link.
+  if (strcasecmp($url_host, $_noindex_external_links_domain_name) == 0) {
+    // Inner link.
     return $match[0];
+  }
 
   if ($_noindex_external_links_subdomains_enabled && !empty($_noindex_external_links_top_domain_name)) {
-    if (strcasecmp($url_host, $_noindex_external_links_top_domain_name) == 0) { // This domain link.
+    if (strcasecmp($url_host, $_noindex_external_links_top_domain_name) == 0) {
+      // This domain link.
       return $match[0];
     }
 
     $length = strlen($_noindex_external_links_top_domain_name);
 
-    if ($length > 0 && substr($url_host, -$length) === $_noindex_external_links_top_domain_name) { // If this is domain link.
+    if ($length > 0 && substr($url_host, -$length) === $_noindex_external_links_top_domain_name) {
+      // If this is domain link.
       return $match[0];
     }
   }
