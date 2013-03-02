@@ -181,7 +181,7 @@ function _noindex_external_links_process($text, $filter, $format) {
   global $_noindex_external_links_top_domain_name;
   global $_noindex_external_links_domain_name;
 
-  if(!isset($_noindex_external_links_allowed_domains) 
+  if (!isset($_noindex_external_links_allowed_domains)
      || !isset($_noindex_external_links_denied_domains)
      || !isset($_noindex_external_links_subdomains_enabled)
      || !isset($_noindex_external_links_top_domain_name)
