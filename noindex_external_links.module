@@ -181,45 +181,52 @@ function _noindex_external_links_process($text, $filter, $format) {
   global $_noindex_external_links_top_domain_name;
   global $_noindex_external_links_domain_name;
 
-  $_noindex_external_links_allowed_domains = preg_split("/[\s]*[,][\s]*/", trim(variable_get('noindex_external_links_allowed_domains')));
-  array_walk_recursive($_noindex_external_links_allowed_domains, '_noindex_external_links_item');
+  if(!isset($_noindex_external_links_allowed_domains) 
+     || !isset($_noindex_external_links_denied_domains)
+     || !isset($_noindex_external_links_subdomains_enabled)
+     || !isset($_noindex_external_links_top_domain_name)
+     || !isset($_noindex_external_links_method)) {
+    $_noindex_external_links_allowed_domains = preg_split("/[\s]*[,][\s]*/", trim(variable_get('noindex_external_links_allowed_domains')));
+    array_walk_recursive($_noindex_external_links_allowed_domains, '_noindex_external_links_item');
 
-  $_noindex_external_links_denied_domains = preg_split("/[\s]*[,][\s]*/", trim(variable_get('noindex_external_links_denied_domains')));
-  array_walk_recursive($_noindex_external_links_denied_domains, '_noindex_external_links_item');
+    $_noindex_external_links_denied_domains = preg_split("/[\s]*[,][\s]*/", trim(variable_get('noindex_external_links_denied_domains')));
+    array_walk_recursive($_noindex_external_links_denied_domains, '_noindex_external_links_item');
 
-  // Find domains in both lists:
-  $ignored_domains = array_diff($_noindex_external_links_allowed_domains, $_noindex_external_links_denied_domains);
-  if (count($ignored_domains) > 0) {
-    foreach ($ignored_domains as $domain) {
-      unset($_noindex_external_links_allowed_domains[$domain]);
-      unset($_noindex_external_links_denied_domains[$domain]);
-    }
-  }
-  $_noindex_external_links_domain_name = '';
-  if (isset($_SERVER['HTTP_HOST'])) {
-    $_noindex_external_links_domain_name = strtolower($_SERVER['HTTP_HOST']);
-  }
-  elseif (isset($_SERVER['SERVER_NAME'])) {
-    $_noindex_external_links_domain_name = strtolower($_SERVER['SERVER_NAME']);
-  }
-  elseif (isset($_SERVER['HOSTNAME'])) {
-    $_noindex_external_links_domain_name = strtolower($_SERVER['HOSTNAME']);
-  }
-
-  $_noindex_external_links_subdomains_enabled = variable_get('noindex_external_links_subdomains_enabled');
-  $_noindex_external_links_top_domain_name = NULL;
-  if ($_noindex_external_links_subdomains_enabled) {
-    $host_parts = explode(".", $_noindex_external_links_domain_name);
-    $domain_level = variable_get('noindex_external_links_top_domain_level', 2);
-    $level_count = count($host_parts);
-    if (is_array($host_parts) && $level_count >= $domain_level) {
-      $_noindex_external_links_top_domain_name = $host_parts[$level_count - $domain_level];
-      for ($level = $level_count - $domain_level + 1; $level < $level_count; $level++) {
-        $_noindex_external_links_top_domain_name .= '.' . $host_parts[$level];
+    // Find domains in both lists:
+    $ignored_domains = array_diff($_noindex_external_links_allowed_domains, $_noindex_external_links_denied_domains);
+    if (count($ignored_domains) > 0) {
+      foreach ($ignored_domains as $domain) {
+        unset($_noindex_external_links_allowed_domains[$domain]);
+        unset($_noindex_external_links_denied_domains[$domain]);
       }
     }
+    $_noindex_external_links_domain_name = '';
+    if (isset($_SERVER['HTTP_HOST'])) {
+      $_noindex_external_links_domain_name = strtolower($_SERVER['HTTP_HOST']);
+    }
+    elseif (isset($_SERVER['SERVER_NAME'])) {
+      $_noindex_external_links_domain_name = strtolower($_SERVER['SERVER_NAME']);
+    }
+    elseif (isset($_SERVER['HOSTNAME'])) {
+      $_noindex_external_links_domain_name = strtolower($_SERVER['HOSTNAME']);
+    }
+
+    $_noindex_external_links_subdomains_enabled = variable_get('noindex_external_links_subdomains_enabled', 0);
+    $_noindex_external_links_top_domain_name = '';
+    if ($_noindex_external_links_subdomains_enabled) {
+      $host_parts = explode(".", $_noindex_external_links_domain_name);
+      $domain_level = variable_get('noindex_external_links_top_domain_level', 2);
+      $level_count = count($host_parts);
+      if (is_array($host_parts) && $level_count >= $domain_level) {
+        $_noindex_external_links_top_domain_name = $host_parts[$level_count - $domain_level];
+        for ($level = $level_count - $domain_level + 1; $level < $level_count; $level++) {
+          $_noindex_external_links_top_domain_name .= '.' . $host_parts[$level];
+        }
+      }
+    }
+    $_noindex_external_links_method = variable_get('noindex_external_links_method', array());
   }
-  $_noindex_external_links_method = variable_get('noindex_external_links_method', array());
+
   if (count($_noindex_external_links_method) > 0 || count($_noindex_external_links_denied_domains) > 0) {
     $regexp = '/<a(.*?)\shref="([^"]+)"\s*([^>]*)>(.*?)<\/a>/is';
     $text = preg_replace_callback($regexp, 'noindex_external_links_replace', $text);
