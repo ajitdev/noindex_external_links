@@ -202,13 +202,13 @@ function _noindex_external_links_process($text, $filter, $format) {
     }
     $_noindex_external_links_domain_name = '';
     if (isset($_SERVER['HTTP_HOST'])) {
-      $_noindex_external_links_domain_name = strtolower($_SERVER['HTTP_HOST']);
+      $_noindex_external_links_domain_name = drupal_strtolower($_SERVER['HTTP_HOST']);
     }
     elseif (isset($_SERVER['SERVER_NAME'])) {
-      $_noindex_external_links_domain_name = strtolower($_SERVER['SERVER_NAME']);
+      $_noindex_external_links_domain_name = drupal_strtolower($_SERVER['SERVER_NAME']);
     }
     elseif (isset($_SERVER['HOSTNAME'])) {
-      $_noindex_external_links_domain_name = strtolower($_SERVER['HOSTNAME']);
+      $_noindex_external_links_domain_name = drupal_strtolower($_SERVER['HOSTNAME']);
     }
 
     $_noindex_external_links_subdomains_enabled = variable_get('noindex_external_links_subdomains_enabled', 0);
@@ -269,9 +269,9 @@ function noindex_external_links_replace($match) {
       return $match[0];
     }
 
-    $length = strlen($_noindex_external_links_top_domain_name);
+    $length = drupal_strlen($_noindex_external_links_top_domain_name);
 
-    if ($length > 0 && substr($url_host, -$length) === $_noindex_external_links_top_domain_name) {
+    if ($length > 0 && drupal_substr($url_host, -$length) === $_noindex_external_links_top_domain_name) {
       // If this is domain link.
       return $match[0];
     }
