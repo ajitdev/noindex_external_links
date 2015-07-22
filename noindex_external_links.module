@@ -185,10 +185,10 @@ function _noindex_external_links_process($text, $filter, $format) {
      || !isset($_noindex_external_links_subdomains_enabled)
      || !isset($_noindex_external_links_top_domain_name)
      || !isset($_noindex_external_links_method)) {
-    $_noindex_external_links_allowed_domains = preg_split("/[\s]*[,][\s]*/", trim(variable_get('noindex_external_links_allowed_domains')));
+    $_noindex_external_links_allowed_domains = preg_split("/[\s]*[,][\s]*/", str_replace(array("\r\n", "\r", "\n"), ',', trim(variable_get('noindex_external_links_allowed_domains'))));
     array_walk_recursive($_noindex_external_links_allowed_domains, '_noindex_external_links_item');
 
-    $_noindex_external_links_denied_domains = preg_split("/[\s]*[,][\s]*/", trim(variable_get('noindex_external_links_denied_domains')));
+    $_noindex_external_links_denied_domains = preg_split("/[\s]*[,][\s]*/", str_replace(array("\r\n", "\r", "\n"), ',', trim(variable_get('noindex_external_links_denied_domains'))));
     array_walk_recursive($_noindex_external_links_denied_domains, '_noindex_external_links_item');
 
     // Find domains in both lists:
