@@ -158,7 +158,6 @@ function noindex_external_links_filter_info() {
     'description' => t('Links will be wrapped with tag NOINDEX and will have attribute rel="nofollow" added to them.'),
     'process callback' => '_noindex_external_links_process',
     'tips callback'  => '_noindex_external_links_tips',
-    'cache' => FALSE,
   );
   return $filters;
 }
