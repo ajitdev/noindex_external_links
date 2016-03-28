@@ -1,0 +1,5 @@
+name: Noindex External Links
+type: module
+description: 'Take control of indexing external links on your site.'
+core: 8.x
+package: SEO
